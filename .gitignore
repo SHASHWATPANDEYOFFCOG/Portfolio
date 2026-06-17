@@ -1,0 +1,13 @@
+# OS / editor cruft
+.DS_Store
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+*.log
+
+# Node (in case build tooling is added later)
+node_modules/
+
+# Editor / tooling
+.qodo/
+.vscode/

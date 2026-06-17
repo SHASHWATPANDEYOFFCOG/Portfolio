@@ -236,8 +236,9 @@ document.addEventListener("DOMContentLoaded", () => {
                 headers: { "Content-Type": "application/json", Accept: "application/json" },
                 body: JSON.stringify({
                     access_key: WEB3FORMS_ACCESS_KEY,
-                    subject: "New message from your portfolio",
+                    subject: `New portfolio message from ${data.name}`,
                     from_name: "Portfolio Contact Form",
+                    replyto: data.email,
                     name: data.name,
                     email: data.email,
                     message: data.message

@@ -207,20 +207,57 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     });
 
-    form.addEventListener("submit", (e) => {
+    // Web3Forms access key — get a free one at https://web3forms.com
+    const WEB3FORMS_ACCESS_KEY = "f3dacc1b-6315-453b-b251-5cee0667a347";
+
+    form.addEventListener("submit", async (e) => {
         e.preventDefault();
         let valid = true;
+        const data = {};
         Object.keys(validators).forEach(field => {
             const input = form.querySelector(`#${field}`);
             valid = setError(field, validators[field](input.value)) && valid;
+            data[field] = input.value;
         });
 
-        if (valid) {
-            success.classList.add("show");
-            form.reset();
-            setTimeout(() => success.classList.remove("show"), 5000);
-        } else {
+        if (!valid) {
             success.classList.remove("show");
+            return;
+        }
+
+        const btn = form.querySelector('button[type="submit"]');
+        const originalText = btn.textContent;
+        btn.disabled = true;
+        btn.textContent = "Sending…";
+
+        try {
+            const res = await fetch("https://api.web3forms.com/submit", {
+                method: "POST",
+                headers: { "Content-Type": "application/json", Accept: "application/json" },
+                body: JSON.stringify({
+                    access_key: WEB3FORMS_ACCESS_KEY,
+                    subject: "New message from your portfolio",
+                    from_name: "Portfolio Contact Form",
+                    name: data.name,
+                    email: data.email,
+                    message: data.message
+                })
+            });
+            const result = await res.json();
+            if (result.success) {
+                success.textContent = "✅ Thanks! Your message has been sent — I'll reply soon.";
+                success.classList.add("show");
+                form.reset();
+                setTimeout(() => success.classList.remove("show"), 6000);
+            } else {
+                throw new Error(result.message || "Submission failed");
+            }
+        } catch (err) {
+            success.textContent = "⚠️ Couldn't send right now — please email me at shashwatpandeyoffcog3039@gmail.com.";
+            success.classList.add("show");
+        } finally {
+            btn.disabled = false;
+            btn.textContent = originalText;
         }
     });
 

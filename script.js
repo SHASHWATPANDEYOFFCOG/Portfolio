@@ -241,7 +241,8 @@ document.addEventListener("DOMContentLoaded", () => {
                     replyto: data.email,
                     name: data.name,
                     email: data.email,
-                    message: data.message
+                    message: data.message,
+                    botcheck: form.querySelector("#botcheck").checked
                 })
             });
             const result = await res.json();
